@@ -66,9 +66,9 @@ if uploaded_file:
     * If the answer to question 7 is "partially delivered", mention that in you response.
 
     14. Was this shipment delivered? 
-    Answer "Yes" if there is clear evidence that this shipment was delivered, 
-    "No" if there's clear evidence the shipment was not delivered
-    or "Unclear" if there is no clear evidence either way.
+    Answer "Yes" if there is clear evidence that this shipment was delivered; 
+    "No" if there's clear evidence the shipment was not delivered, for example if no signatures are present and it's not marked as "partially delivered" nor "fully delivered"
+    ; or "Unclear" if there is no clear evidence either way.
 
     Finally, place the answers to all the questions at the end, on a single line, separated by semicolons, including any justification.
     """
