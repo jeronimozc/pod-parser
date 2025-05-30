@@ -24,7 +24,7 @@ uploaded_file = st.file_uploader(
 if uploaded_file:
 
     # Process the uploaded file
-    results = parse_documents([uploaded_file])
+    results = parse_documents([uploaded_file.getvalue()])
     parsed_doc = results[0]
     pod_text = parsed_doc.markdown
 
