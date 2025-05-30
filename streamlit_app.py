@@ -47,7 +47,7 @@ if uploaded_file:
     Answer the following questions, in order, based on the Input Text. Repeat each question before its answer, separate each question-answer pair by a line break. Write all dates in MM/DD/YYYY format, and assume all dates belong to the year range 2024-2026.
 
     1. Is this a Bill of Lading? If the answer is negative, ignore the rest of the questions and simply output "No, this is not a Bill of Lading.", followed by a reasoning for you answer.
-    2. Is this Bill of Lading from a company named Solugen? If the answer is negative, ignore the rest of the questions and simply output "No, this Bill of Lading is not from Solugen", followed by a reasoning for you answer.
+    2. Is this Bill of Lading from a company named Solugen? This means that the company name "Solugen" should appear on the document. If the answer is negative, ignore the rest of the questions and simply output "No, this Bill of Lading is not from Solugen", followed by a reasoning for you answer.
     3. What is the B/L date?
     4. What is the B/L number? 
     5. To whom was it sold? 
@@ -90,7 +90,7 @@ if uploaded_file:
     disclaimer = "Please consider I'm a demo app. My responses can still improve with some work, so any feedback is appreciated!"
 
     output = f"""
-    **Was this Solugen shipment delivered?**  
+    **Was this shipment delivered?**  
     :robot_face: {response_data[-1].strip()}
 
     :material/info: *{disclaimer}*
