@@ -16,7 +16,7 @@ st.write(
 # see https://docs.streamlit.io/develop/concepts/connections/secrets-management
 
 # Initiate the Google GenAI model.
-model = init_chat_model("gemini-2.0-flash", model_provider="google_genai", temperature=0.1)
+model = init_chat_model("gemini-2.0-flash", model_provider="google_genai", temperature=0.1, timeout=120)
 
 # Let the user upload a file via `st.file_uploader`.
 uploaded_file = st.file_uploader(
