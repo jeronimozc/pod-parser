@@ -61,17 +61,17 @@ if uploaded_file:
 
     After answering these questions, use the answers to questions 7, 10, 11 and/or 12 to answer the following question and fully justify your answer.
     Consider the following when answering:
-    * If the answer to both questions 10 and 12 are "no", the shipment was not delivered.
-    * If the answer to both questions 10 and 12 are negative and the answer to question 7 is unknown or negative, the shipment was not delivered.
+    * If the  Receiver Signature is not present and the Consignor Signature is not present, the shipment was not delivered.
+    * If the  Receiver Signature is not present, the Consignor Signature is not present, and it is not marked as "fully delivered" or "partially delivered", the shipment was not delivered.
     * If the answer to question 7 is "fully delivered", the shipment was delivered.
     * If the answers to question 10 or 12 are "yes", the shipment was delivered. 
     * If the answer to question 7 is "partially delivered", mention that in you response.
 
 
     14. Was this shipment delivered? 
-    Answer "Yes" along with your reasoning if there is clear evidence that this shipment was delivered; 
-    Answer "No" along with your reasoning if the shipment was not delivered
-    ; or answer "Unclear" along with your reasoning if there is no clear evidence either way.
+    Answer "Yes" along with your reasoning if there is clear evidence that this shipment was delivered 
+    or answer "No" along with your reasoning if the shipment was not delivered.
+    If it is extremely unclear if the shipment was delivered or not, you may answer "Unclear" along with your reasoning, but try to avoid this answer if possible.
 
     Finally, place the answers to all the questions at the end, on a single line, separated by semicolons, including any justification.
     """
