@@ -71,7 +71,7 @@ if uploaded_file:
     "No" if there's clear evidence the shipment was not delivered
     or "Unclear" if there is no clear evidence either way.
 
-    Finally, place the answers to all the questions at the end, on a single line, separated by semicolons without spaces, including any justification.
+    Finally, place the answers to all the questions at the end, on a single line, separated by semicolons, including any justification.
     """
 
     prompt_template = ChatPromptTemplate.from_messages(
@@ -86,5 +86,14 @@ if uploaded_file:
 
     # Stream the response to the app using `st.write_stream`.
     response_data = response.content.split("\n")[-1].split(";")
-    stream = f"Was the shipment delivered?\n{ response_data[-1]}"
-    st.write_stream(stream)
+
+    disclaimer = "Please consider I'm a demo app. My responses can still improve with some work, so any feedback is appreciated!"
+
+    output = f"""
+    **Was the shipment delivered?**  
+    :robot_face: {response_data[-1].strip()}
+
+    :material/info: *{disclaimer}*
+    """
+
+    st.write(output)
