@@ -5,6 +5,13 @@ from agentic_doc.parse import parse_documents
 from langchain.chat_models import init_chat_model
 from langchain_core.prompts import ChatPromptTemplate
 
+# get api keys from secrets
+if not os.environ.get("VISION_AGENT_API_KEY"):
+  os.environ["VISION_AGENT_API_KEY"] = st.secrets["VISION_AGENT_API_KEY"]
+
+if not os.environ.get("GOOGLE_API_KEY"):
+  os.environ["GOOGLE_API_KEY"] = st.secrets["GOOGLE_API_KEY"]
+
 # Show title and description.
 st.title("Proof of Delivery Parser")
 st.write(
