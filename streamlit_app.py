@@ -62,6 +62,7 @@ if uploaded_file:
     After answering these questions, use the answers to questions 7, 10, 11 and/or 12 to answer the following question and fully justify your answer.
     Consider the following when answering:
     * If the answer to both questions 10 and 12 are "no", the shipment was not delivered.
+    * If the answer to both questions 10 and 12 are negative and the answer to question 7 is unknown or negative, the shipment was not delivered.
     * If the answer to question 7 is "fully delivered", the shipment was delivered.
     * If the answers to question 10 or 12 are "yes", the shipment was delivered. 
     * If the answer to question 7 is "partially delivered", mention that in you response.
