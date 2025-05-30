@@ -1,3 +1,3 @@
 streamlit
 agentic-doc
-langchain-google-genai
+langchain[google-genai]
