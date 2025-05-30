@@ -15,7 +15,7 @@ if not os.environ.get("GOOGLE_API_KEY"):
 # Show title and description.
 st.title("Proof of Delivery Parser")
 st.write(
-    "Upload a Proof of Delivery document below and the agent will attempt" \
+    "Upload a Bill of Lading or Proof of Delivery document below and the agent will attempt " \
     "to infer whether the corresponding shipment was delivered."
 )
 
