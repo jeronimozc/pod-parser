@@ -1,4 +1,6 @@
 import streamlit as st
+import tempfile
+import os
 from agentic_doc.parse import parse_documents
 from langchain.chat_models import init_chat_model
 from langchain_core.prompts import ChatPromptTemplate
@@ -23,8 +25,13 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file:
 
+    temp_dir = tempfile.mkdtemp()
+    path = os.path.join(temp_dir, uploaded_file.name)
+    with open(path, "wb") as f:
+            f.write(uploaded_file.getvalue())
+
     # Process the uploaded file
-    results = parse_documents([uploaded_file.name])
+    results = parse_documents([path])
     parsed_doc = results[0]
     pod_text = parsed_doc.markdown
 
