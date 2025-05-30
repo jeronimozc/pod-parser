@@ -1,2 +1,3 @@
 streamlit
-openai
+agentic-doc
+langchain-google-genai

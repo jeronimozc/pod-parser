@@ -1,53 +1,76 @@
 import streamlit as st
-from openai import OpenAI
+from agentic_doc.parse import parse_documents
+from langchain.chat_models import init_chat_model
+from langchain_core.prompts import ChatPromptTemplate
 
 # Show title and description.
-st.title("📄 Document question answering")
+st.title("Proof of Delivery Parser")
 st.write(
-    "Upload a document below and ask a question about it – GPT will answer! "
-    "To use this app, you need to provide an OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys). "
+    "Upload a Proof of Delivery document below and the agent will attempt" \
+    "to infer whether the corresponding shipment was delivered."
 )
 
-# Ask user for their OpenAI API key via `st.text_input`.
-# Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
-# via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-openai_api_key = st.text_input("OpenAI API Key", type="password")
-if not openai_api_key:
-    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
-else:
+# We are using Streamlit's secrets feature
+# see https://docs.streamlit.io/develop/concepts/connections/secrets-management
 
-    # Create an OpenAI client.
-    client = OpenAI(api_key=openai_api_key)
+# Initiate the Google GenAI model.
+model = init_chat_model("gemini-2.0-flash", model_provider="google_genai", temperature=0.1)
 
-    # Let the user upload a file via `st.file_uploader`.
-    uploaded_file = st.file_uploader(
-        "Upload a document (.txt or .md)", type=("txt", "md")
+# Let the user upload a file via `st.file_uploader`.
+uploaded_file = st.file_uploader(
+    "Upload a document (.pdf)", type=("pdf")
+)
+
+if uploaded_file:
+
+    # Process the uploaded file
+    results = parse_documents([uploaded_file])
+    parsed_doc = results[0]
+    pod_text = parsed_doc.markdown
+
+    # Prepare LLM prompt
+    system_template = """
+    Answer the following questions, in order, based on the Input Text. Repeat each question before its answer, separate each question-answer pair by a line break. Write all dates in MM/DD/YYYY format, and assume all dates belong to the year range 2024-2026.
+
+    1. Is this a Bill of Lading? If the answer is negative, ignore the rest of the questions and simply output "This is not a Bill of Lading".
+    2. Is it from a company named Solugen? If the answer is negative, ignore the rest of the questions and simply output "This Bill of Lading is not from Solugen".
+    3. What is the B/L date?
+    4. What is the B/L number? 
+    5. To whom was it sold? 
+    6. To whom was it shipped? 
+    7. Is this marked "fully delivered", "partially delivered" or is this unknown?
+    8. Is the Driver Signature present? 
+    9. Is there a Ship Date? If so, what is the Ship Date?
+    10. Is the Reciever Signature present?
+    11. What is there a Delivery Date? If so, what is the Delivery Date?
+    12. Is the Consignee Signature present?
+    13. Is the Shipper's Certification Signature present?
+
+    After answering these questions, use the answers to questions 7, 10, 11 and/or 12 to answer the following question and fully justify your answer.
+    Consider the following when answering:
+    * If the answer to question 7 is "fully delivered", the shipment was delivered.
+    * If the answers to question 10 or 12 are "yes", the shipment was delivered. 
+    * If the answer to question 7 is "partially delivered", mention that in you response.
+
+    14. Was the shipment delivered? 
+    Answer "Yes" if there is clear evidence that this shipment was delivered, 
+    "No" if there's clear evidence the shipment was not delivered
+    or "Unclear" if there is no clear evidence either way.
+
+    Finally, place the answers to all the questions at the end, on a single line, separated by semicolons without spaces, including any justification.
+    """
+
+    prompt_template = ChatPromptTemplate.from_messages(
+        [("system", system_template), 
+        ("user", "<Input Text>\n{input_text}\n</Input Text>")]
     )
 
-    # Ask the user for a question via `st.text_area`.
-    question = st.text_area(
-        "Now ask a question about the document!",
-        placeholder="Can you give me a short summary?",
-        disabled=not uploaded_file,
-    )
+    prompt = prompt_template.invoke({"input_text": pod_text})
 
-    if uploaded_file and question:
+    # Invoke LLM    
+    response = model.invoke(prompt)
 
-        # Process the uploaded file and question.
-        document = uploaded_file.read().decode()
-        messages = [
-            {
-                "role": "user",
-                "content": f"Here's a document: {document} \n\n---\n\n {question}",
-            }
-        ]
-
-        # Generate an answer using the OpenAI API.
-        stream = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=messages,
-            stream=True,
-        )
-
-        # Stream the response to the app using `st.write_stream`.
-        st.write_stream(stream)
+    # Stream the response to the app using `st.write_stream`.
+    response_data = response.content.split("\n")[-1].split(";")
+    stream = f"Was the shipment delivered?\n{ response_data[-1]}"
+    st.write_stream(stream)
